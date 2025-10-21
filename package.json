@@ -1,0 +1,23 @@
+{
+  "name": "com.natteens.dialect",
+  "version": "0.1.0",
+  "displayName": "Dialect",
+  "description": "A modular, graph-based dialogue framework for Unity with full localization support and editor integration.",
+  "keywords": [
+    "Unity",
+    "GameDev",
+    "Dialect"
+  ],
+  "author": {
+    "name": "Nathan da Silva Miranda",
+    "email": "natteens.social@gmail.com",
+    "url": "https://github.com/Natteens"
+  },
+  "unity": "6000.0",
+  "documentationUrl": "https://github.com/Natteens/dialect",
+  "changelogUrl": "https://github.com/Natteens/dialect/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/Natteens/dialect/blob/main/LICENSE.md",
+  "dependencies": {
+    "com.unity.graphtoolkit": "0.4.0-exp.2"
+  }
+}
