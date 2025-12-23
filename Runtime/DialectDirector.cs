@@ -4,6 +4,7 @@ using Dialect.Core;
 using Dialect.Executors;
 using Dialect.Nodes;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace Dialect
 {
@@ -20,6 +21,8 @@ namespace Dialect
         DialectRuntimeNode currentNode;
         bool isRunning;
         public object customData;
+        
+        bool isListeningToLocaleChanges;
 
         void Awake()
         {
@@ -32,6 +35,32 @@ namespace Dialect
                 { typeof(ConditionRuntimeNode), new ConditionNodeExecutor() },
                 { typeof(DialectEndRuntimeNode), new DialectEndNodeExecutor() }
             };
+        }
+
+        void OnEnable()
+        {
+            if (!isListeningToLocaleChanges)
+            {
+                LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+                isListeningToLocaleChanges = true;
+            }
+        }
+
+        void OnDisable()
+        {
+            if (isListeningToLocaleChanges)
+            {
+                LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+                isListeningToLocaleChanges = false;
+            }
+        }
+
+        void OnLocaleChanged(UnityEngine.Localization.Locale locale)
+        {
+            if (isRunning && currentNode != null)
+            {
+                ProcessCurrentNode();
+            }
         }
 
         public void StartDialogue()
