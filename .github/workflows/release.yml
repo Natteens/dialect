@@ -20,63 +20,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true    # necessário para @semantic-release/git
+          persist-credentials: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install jq (required for JSON manipulation)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-
-      - name: Filter Unity/UPM dependencies dynamically
-        run: |
-          if [ ! -f package.json ]; then
-            echo "package.json não encontrado. Pulando remoção de pacotes Unity."
-            exit 0
-          fi
-
-          removed_any=false
-
-          for section in dependencies devDependencies; do
-            if jq -e --arg sec "$section" '.[$sec] // empty | type=="object"' package.json >/dev/null; then
-              # Filter packages that:
-              # 1. Start with "com." (Unity Package Manager convention)
-              # 2. Contain "unity" in the name (case insensitive)
-              # 3. Have git-based URLs as values (Unity packages from GitHub)
-              upm_packages=$(jq -r --arg sec "$section" '
-                .[$sec] // {} | to_entries[] | 
-                select(
-                  (.key | test("^com\\.")) or
-                  (.key | test("unity"; "i")) or
-                  (.value | type == "string" and test("^(git\\+|https://github\\.com)"))
-                ) | .key
-              ' package.json 2>/dev/null || echo "")
-          
-              if [ -n "$upm_packages" ]; then
-                echo "Pacotes Unity/UPM encontrados em $section: $upm_packages"
-                for pkg in $upm_packages; do
-                  echo "Removendo $pkg de $section"
-                  jq --arg sec "$section" --arg key "$pkg" 'del(.[$sec][$key])' package.json > package.filtered.json && mv package.filtered.json package.json
-                  removed_any=true
-                done
-              fi
-            fi
-          done
-
-          if [ "$removed_any" = false ]; then
-            echo "Nenhum pacote Unity/UPM removido."
-          else
-            echo "Dependências Unity/UPM removidas com sucesso. Conteúdo atual do package.json:"
-            jq . package.json
-          fi
-
       - name: Install dependencies (no lock)
         run: |
-          # Se quiser evitar conflitos adicionais, pode rodar com --no-audit --no-fund
           npm install --no-package-lock
 
       - name: Release
