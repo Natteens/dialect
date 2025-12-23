@@ -108,32 +108,65 @@ namespace Dialect.Editor.AssetImport
                 case DialogueNode dialogueNode:
                     var speakerPort = dialogueNode.GetInputPortByName("SpeakerName");
                     var dialoguePort = dialogueNode.GetInputPortByName("DialogueText");
-                    
-                    LocalizedString speakerName = GetInputPortValue<LocalizedString>(speakerPort);
-                    LocalizedString dialogueText = GetInputPortValue<LocalizedString>(dialoguePort);
-                    
-                    returnedNodes.Add(new DialogueRuntimeNode
+    
+                    var runtimeNode = new DialogueRuntimeNode();
+    
+                    if (speakerPort?.isConnected == true && speakerPort.firstConnectedPort.GetNode() is LocalizedNode)
                     {
-                        speakerName = speakerName,
-                        dialogueText = dialogueText
-                    });
+                        var localizedNode = (LocalizedNode)speakerPort.firstConnectedPort.GetNode();
+                        var localizedPort = localizedNode.GetInputPortByName("localized");
+                        runtimeNode._speakerLocalized = GetInputPortValue<LocalizedString>(localizedPort);
+                    }
+                    else
+                    {
+                        runtimeNode.speakerName = GetInputPortValue<string>(speakerPort);
+                    }
+    
+                    if (dialoguePort?.isConnected == true && dialoguePort.firstConnectedPort.GetNode() is LocalizedNode)
+                    {
+                        var localizedNode = (LocalizedNode)dialoguePort.firstConnectedPort.GetNode();
+                        var localizedPort = localizedNode.GetInputPortByName("localized");
+                        runtimeNode._dialogueLocalized = GetInputPortValue<LocalizedString>(localizedPort);
+                    }
+                    else
+                    {
+                        runtimeNode.dialogueText = GetInputPortValue<string>(dialoguePort);
+                    }
+    
+                    returnedNodes.Add(runtimeNode);
                     break;
                     
                 case ChoiceNode choiceNode:
-                    var choiceTexts = new List<LocalizedString>();
+                    var choiceTexts = new List<string>();
+                    var choiceLocalized = new List<LocalizedString>();
+    
                     int portCount = 2;
                     choiceNode.GetNodeOptionByName("portCount")?.TryGetValue(out portCount);
-                    
+    
                     for (int i = 0; i < portCount; i++)
                     {
-                        var choicePort = choiceNode.GetInputPortByName($"ChoiceText{i}");
-                        var choiceText = GetInputPortValue<LocalizedString>(choicePort);
-                        choiceTexts.Add(choiceText);
+                        var choicePort = choiceNode.GetInputPortByName($"Choice{i}_In");
+        
+                        // Checa se é LocalizedNode conectado
+                        if (choicePort?.isConnected == true && choicePort.firstConnectedPort.GetNode() is LocalizedNode)
+                        {
+                            var localizedNode = (LocalizedNode)choicePort.firstConnectedPort.GetNode();
+                            var localizedPort = localizedNode.GetInputPortByName("localized");
+                            choiceLocalized.Add(GetInputPortValue<LocalizedString>(localizedPort));
+                            choiceTexts.Add(null); // Placeholder
+                        }
+                        else
+                        {
+                            var choiceText = GetInputPortValue<string>(choicePort);
+                            choiceTexts.Add(choiceText);
+                            choiceLocalized.Add(null);
+                        }
                     }
-                    
+    
                     returnedNodes.Add(new ChoiceRuntimeNode
                     {
-                        choiceTexts = choiceTexts.ToArray()
+                        choiceTexts = choiceTexts.ToArray(),
+                        _choiceLocalized = choiceLocalized.ToArray()
                     });
                     break;
                     

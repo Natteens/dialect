@@ -12,14 +12,17 @@ namespace Dialect.Nodes
     [Serializable]
     public class DialogueRuntimeNode : DialectRuntimeNode
     {
-        public LocalizedString speakerName;
-        public LocalizedString dialogueText;
+        public string speakerName;
+        public string dialogueText;
+        public LocalizedString _speakerLocalized;
+        public LocalizedString _dialogueLocalized;
     }
-
+    
     [Serializable]
     public class ChoiceRuntimeNode : DialectRuntimeNode
     {
-        public LocalizedString[] choiceTexts;
+        public string[] choiceTexts;
+        public LocalizedString[] _choiceLocalized;
     }
 
     [Serializable]

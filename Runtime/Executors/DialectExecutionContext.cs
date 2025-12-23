@@ -29,17 +29,25 @@ namespace Dialect.Executors
         {
             string speaker = string.Empty;
             string dialogue = string.Empty;
-            
-            if (node.speakerName != null && !node.speakerName.IsEmpty)
+        
+            if (node._speakerLocalized != null && !node._speakerLocalized.IsEmpty)
             {
-                speaker = node.speakerName.GetLocalizedString() ?? string.Empty;
+                speaker = node._speakerLocalized.GetLocalizedString();
             }
-            
-            if (node.dialogueText != null && !node.dialogueText.IsEmpty)
+            else if (!string.IsNullOrEmpty(node.speakerName))
             {
-                dialogue = node.dialogueText.GetLocalizedString() ?? string.Empty;
+                speaker = node.speakerName;
             }
-            
+        
+            if (node._dialogueLocalized != null && !node._dialogueLocalized.IsEmpty)
+            {
+                dialogue = node._dialogueLocalized.GetLocalizedString();
+            }
+            else if (!string.IsNullOrEmpty(node.dialogueText))
+            {
+                dialogue = node.dialogueText;
+            }
+    
             context.onDialogueShown?.Invoke(speaker, dialogue);
             Debug.Log($"[{speaker}]: {dialogue}");
         }
@@ -50,19 +58,24 @@ namespace Dialect.Executors
         public void Execute(ChoiceRuntimeNode node, DialectExecutionContext context)
         {
             var choices = new string[node.choiceTexts.Length];
-            
+        
             for (int i = 0; i < node.choiceTexts.Length; i++)
             {
-                if (node.choiceTexts[i] != null && !node.choiceTexts[i].IsEmpty)
+                if (node._choiceLocalized != null && i < node._choiceLocalized.Length && 
+                    node._choiceLocalized[i] != null && !node._choiceLocalized[i].IsEmpty)
                 {
-                    choices[i] = node.choiceTexts[i].GetLocalizedString() ?? $"Choice {i + 1}";
+                    choices[i] = node._choiceLocalized[i].GetLocalizedString();
+                }
+                else if (node.choiceTexts[i] != null)
+                {
+                    choices[i] = node.choiceTexts[i];
                 }
                 else
                 {
                     choices[i] = $"Choice {i + 1}";
                 }
             }
-            
+        
             context.onChoiceShown?.Invoke(choices);
         }
     }

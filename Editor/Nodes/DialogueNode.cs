@@ -16,11 +16,11 @@ namespace Dialect.Editor.Nodes
             AddInputContextPort(context, EXECUTION_PORT_DEFAULT_NAME, INPUT_DISPLAY_NAME);
             AddOutputContextPort(context, EXECUTION_PORT_DEFAULT_NAME, OUTPUT_DISPLAY_NAME);
 
-            context.AddInputPort<LocalizedString>(SPEAKER_NAME_PORT)
+            context.AddInputPort<string>(SPEAKER_NAME_PORT)
                 .WithDisplayName(SPEAKER_NAME_DISPLAY)
                 .Build();
 
-            context.AddInputPort<LocalizedString>(DIALOGUE_TEXT_PORT)
+            context.AddInputPort<string>(DIALOGUE_TEXT_PORT)
                 .WithDisplayName(DIALOGUE_TEXT_DISPLAY)
                 .Build();
         }
