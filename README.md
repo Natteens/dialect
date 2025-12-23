@@ -79,47 +79,171 @@ Behavior notes:
 
 ## Example Usage (C#)
 
-This minimal example shows how to subscribe to the director and present text/choices in your UI layer.
-
 ```csharp
+using Dialect;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class DialogueUI : MonoBehaviour
+public class DialectUIExample : MonoBehaviour
 {
-    public Dialect.DialectDirector director; // assign in inspector
+    [Header("References")]
+    public DialectDirector director;
+   
+    [Header("UI Elements")]
+    public GameObject dialoguePanel;
+    public TextMeshProUGUI speakerText;
+    public TextMeshProUGUI dialogueText;
+    public Button continueButton;
+   
+    [Header("Choice UI")]
+    public GameObject choicePanel;
+    public Button choiceButtonPrefab;
+    public Transform choiceContainer;
 
-    void OnEnable()
+    void Start()
     {
-        if (director == null) return;
-        director.OnDialogueShown += HandleDialogue;
-        director.OnChoiceShown += HandleChoices;
-        director.OnDialogueEnded += HandleEnd;
+        if (director != null)
+        {
+            director.OnDialogueShown += ShowDialogue;
+            director.OnChoiceShown += ShowChoices;
+            director.OnDialogueEnded += OnDialogueEnded;
+        }
+
+        if (continueButton != null)
+        {
+            continueButton.onClick.AddListener(() => director.AdvanceDialogue());
+        }
+
+        HideAll();
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
-        if (director == null) return;
-        director.OnDialogueShown -= HandleDialogue;
-        director.OnChoiceShown -= HandleChoices;
-        director.OnDialogueEnded -= HandleEnd;
+        if (director != null)
+        {
+            director.OnDialogueShown -= ShowDialogue;
+            director.OnChoiceShown -= ShowChoices;
+            director.OnDialogueEnded -= OnDialogueEnded;
+        }
+
+        if (continueButton != null)
+        {
+            continueButton.onClick.RemoveAllListeners();
+        }
+    }
+        
+    public void StartDialogue()
+    {
+        if (director != null)
+        {
+            director.StartDialogue();
+        }
     }
 
-    void HandleDialogue(string speaker, string text)
+    void ShowDialogue(string speaker, string dialogue)
     {
-        // Update your UI: speaker label and body text.
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(true);
+        }
+
+        if (choicePanel != null)
+        {
+            choicePanel.SetActive(false);
+        }
+
+        if (speakerText != null)
+        {
+            speakerText.text = speaker;
+            speakerText.gameObject.SetActive(!string.IsNullOrEmpty(speaker));
+        }
+
+        if (dialogueText != null)
+        {
+            dialogueText.text = dialogue;
+        }
+
+        if (continueButton != null)
+        {
+            continueButton.gameObject.SetActive(true);
+        }
     }
 
-    void HandleChoices(string[] choices)
+    void ShowChoices(string[] choices)
     {
-        // Create buttons for each choice and call director.AdvanceDialogue(index) on click.
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+        }
+
+        if (choicePanel != null)
+        {
+            choicePanel.SetActive(true);
+        }
+
+        ClearChoices();
+
+        for (int i = 0; i < choices.Length; i++)
+        {
+            int choiceIndex = i;
+            Button choiceButton = Instantiate(choiceButtonPrefab, choiceContainer);
+                
+            TextMeshProUGUI buttonText = choiceButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText != null)
+            {
+                buttonText.text = choices[i];
+            }
+
+            choiceButton.onClick.AddListener(() => OnChoiceSelected(choiceIndex));
+            choiceButton.gameObject.SetActive(true);
+        }
     }
 
-    void HandleEnd()
+    void OnChoiceSelected(int index)
     {
-        // Hide/clear dialogue UI.
+        ClearChoices();
+            
+        if (director != null)
+        {
+            director.AdvanceDialogue(index);
+        }
+    }
+
+    void ClearChoices()
+    {
+        if (choiceContainer != null)
+        {
+            foreach (Transform child in choiceContainer)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    void OnDialogueEnded()
+    {
+        HideAll();
+    }
+
+    void HideAll()
+    {
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+        }
+
+        if (choicePanel != null)
+        {
+            choicePanel.SetActive(false);
+        }
+
+        ClearChoices();
     }
 }
 ```
+
+![img.png](img.png)
 
 ## Extensibility
 
@@ -137,16 +261,4 @@ public class DialogueUI : MonoBehaviour
 - Keep graphs modular: use action nodes to call game logic instead of embedding it inside nodes.
 - Prefer `LocalizedString` for any user-facing text that requires translation.
 - Validate conditions and actions in small unit tests where possible.
-
-## Contributing & Next Steps
-
-If you'd like, I can also:
-- Add an example scene and a simple Dialogue UI prefab that demonstrates `DialectDirector` in action.
-- Provide a small sample `DialectCondition` and `DialectAction` implementation and unit tests.
-- Create an English-to-Portuguese bilingual README or improved API docs.
-
-Tags: `dialogue`, `localization`, `graph`, `unity`, `editor-tools`, `runtime`
-
 ---
-
-If you want, tell me which of the suggested next steps to implement and I will add it to the package (example scene, prefab, tests, or extra docs).
