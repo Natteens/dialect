@@ -17,5 +17,8 @@
   "documentationUrl": "https://github.com/Natteens/dialect",
   "changelogUrl": "https://github.com/Natteens/dialect/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/Natteens/dialect/blob/main/LICENSE.md",
-  "dependencies": {}
+  "dependencies": {
+    "com.unity.graphtoolkit": "0.4.0-exp.2",
+    "com.unity.localization": "1.5.9"
+  }
 }
