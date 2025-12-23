@@ -10,14 +10,15 @@
   ],
   "author": {
     "name": "Nathan da Silva Miranda",
-    "email": "natteens.social@gmail.com",
-    "url": "https://github.com/Natteens"
+    "url": "https://github.com/Natteens",
+    "email": "natteens.social@gmail.com"
   },
   "unity": "6000.0",
   "documentationUrl": "https://github.com/Natteens/dialect",
   "changelogUrl": "https://github.com/Natteens/dialect/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/Natteens/dialect/blob/main/LICENSE.md",
   "dependencies": {
-    "com.unity.graphtoolkit": "0.4.0-exp.2"
+    "com.unity.graphtoolkit": "0.4.0-exp.2",
+    "com.unity.localization": "1.5.9"
   }
 }

@@ -1,16 +1,25 @@
 {
-  "name": "Dialect.Editor",
-  "rootNamespace": "Dialect",
-  "references": [],
-  "includePlatforms": [
-    "Editor"
-  ],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Dialect.Editor",
+    "rootNamespace": "Dialect",
+    "references": [
+        "GUID:d1e08c06f8f9473888c892637c83c913",
+        "GUID:8c9ef94c4e33aae44bff179e64581112",
+        "GUID:70ef9a24f4cfc4aec911c1414e3f90ad",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:2e77701fe0ceda44fb763f03ee704c37",
+        "GUID:f714f5a1a66a44628c69d24d31158ed5",
+        "GUID:f4dea7fcb51cdfb4aa526b9274bd58f3",
+        "GUID:6aa921a3d3b856045943853ea2a0b7e1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

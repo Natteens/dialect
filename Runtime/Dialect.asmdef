@@ -1,14 +1,20 @@
 {
-  "name": "Dialect",
-  "rootNamespace": "Dialect",
-  "references": [],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Dialect",
+    "rootNamespace": "Dialect",
+    "references": [
+        "GUID:d1e08c06f8f9473888c892637c83c913",
+        "GUID:8c9ef94c4e33aae44bff179e64581112",
+        "GUID:70ef9a24f4cfc4aec911c1414e3f90ad",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:f4dea7fcb51cdfb4aa526b9274bd58f3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
