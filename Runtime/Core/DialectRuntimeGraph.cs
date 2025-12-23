@@ -6,6 +6,6 @@ namespace Dialect.Core
     public class DialectRuntimeGraph : ScriptableObject
     {
         [SerializeReference]
-        public List<DialectRuntimeNode> nodes = new();
+        public List<RuntimeNode> nodes = new();
     }
 }

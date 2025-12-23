@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Dialect.Core;
 using Dialect.Executors;
 using Dialect.Nodes;
@@ -17,25 +16,11 @@ namespace Dialect
         public event Action<string[]> OnChoiceShown;
         public event Action OnDialogueEnded;
         
-        Dictionary<Type, object> executors;
-        DialectRuntimeNode currentNode;
+        RuntimeNode currentNode;
         bool isRunning;
         public object customData;
         
         bool isListeningToLocaleChanges;
-
-        void Awake()
-        {
-            executors = new Dictionary<Type, object>
-            {
-                { typeof(DialectStartRuntimeNode), new DialectStartNodeExecutor() },
-                { typeof(DialogueRuntimeNode), new DialogueNodeExecutor() },
-                { typeof(ChoiceRuntimeNode), new ChoiceNodeExecutor() },
-                { typeof(ActionRuntimeNode), new ActionNodeExecutor() },
-                { typeof(ConditionRuntimeNode), new ConditionNodeExecutor() },
-                { typeof(DialectEndRuntimeNode), new DialectEndNodeExecutor() }
-            };
-        }
 
         void OnEnable()
         {
@@ -114,13 +99,6 @@ namespace Dialect
                 return;
             }
 
-            if (!executors.TryGetValue(currentNode.GetType(), out var executor))
-            {
-                Debug.LogError($"No executor found for node type: {currentNode.GetType()}");
-                EndDialogue();
-                return;
-            }
-
             var context = new DialectExecutionContext
             {
                 director = this,
@@ -130,34 +108,20 @@ namespace Dialect
                 customData = customData
             };
 
-            if (currentNode is DialectStartRuntimeNode startNode)
+            currentNode.Execute(context);
+
+            if (currentNode is EndRuntimeNode)
             {
-                ((IDialectExecutor<DialectStartRuntimeNode>)executor).Execute(startNode, context);
-                AdvanceDialogue(0);
+                EndDialogue();
             }
-            else if (currentNode is DialogueRuntimeNode dialogueNode)
+            else if (currentNode is ConditionRuntimeNode)
             {
-                ((IDialectExecutor<DialogueRuntimeNode>)executor).Execute(dialogueNode, context);
-            }
-            else if (currentNode is ChoiceRuntimeNode choiceNode)
-            {
-                ((IDialectExecutor<ChoiceRuntimeNode>)executor).Execute(choiceNode, context);
-            }
-            else if (currentNode is ActionRuntimeNode actionNode)
-            {
-                ((IDialectExecutor<ActionRuntimeNode>)executor).Execute(actionNode, context);
-                AdvanceDialogue(0);
-            }
-            else if (currentNode is ConditionRuntimeNode conditionNode)
-            {
-                ((IDialectExecutor<ConditionRuntimeNode>)executor).Execute(conditionNode, context);
                 int pathIndex = context.lastConditionResult ? 0 : 1;
                 AdvanceDialogue(pathIndex);
             }
-            else if (currentNode is DialectEndRuntimeNode endNode)
+            else if (currentNode.ShouldAutoAdvance())
             {
-                ((IDialectExecutor<DialectEndRuntimeNode>)executor).Execute(endNode, context);
-                EndDialogue();
+                AdvanceDialogue();
             }
         }
 

@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
+using Dialect.Core;
+using Dialect.Editor.Utils;
+using Dialect.Nodes;
+using Unity.GraphToolkit.Editor;
 using UnityEngine.Localization;
 
 namespace Dialect.Editor.Nodes
 {
     [Serializable]
-    internal class ChoiceNode : BaseNode
+    internal class ChoiceNode : BaseNode, IConvertibleToRuntime
     {
         const string PORT_COUNT_OPTION = "portCount";
         const string CHOICE_PORT_PREFIX = "Choice";
@@ -29,10 +34,43 @@ namespace Dialect.Editor.Nodes
             {
                 string outPortName = $"{CHOICE_PORT_PREFIX}{i}_Out";
                 string inPortName = $"{CHOICE_PORT_PREFIX}{i}_In";
-
                 AddOutputContextPort(context, outPortName, $"Choice {i + 1} Out");
-                AddInputContextPort(context, inPortName, $"Choice {i + 1} In");
+                AddInputContextPort<string>(context, inPortName, $"Choice {i + 1} In");
             }
+        }
+
+        public RuntimeNode CreateRuntimeNode()
+        {
+            var choiceTexts = new List<string>();
+            var choiceLocalized = new List<LocalizedString>();
+    
+            int portCount = 2;
+            GetNodeOptionByName(PORT_COUNT_OPTION)?.TryGetValue(out portCount);
+    
+            for (int i = 0; i < portCount; i++)
+            {
+                var choicePort = GetInputPortByName($"{CHOICE_PORT_PREFIX}{i}_In");
+        
+                if (choicePort?.isConnected == true && choicePort.firstConnectedPort.GetNode() is LocalizedNode)
+                {
+                    var localizedNode = (LocalizedNode)choicePort.firstConnectedPort.GetNode();
+                    var localizedPort = localizedNode.GetInputPortByName("localized");
+                    choiceLocalized.Add(NodeUtility.GetInputPortValue<LocalizedString>(localizedPort));
+                    choiceTexts.Add(null);
+                }
+                else
+                {
+                    var choiceText = NodeUtility.GetInputPortValue<string>(choicePort);
+                    choiceTexts.Add(choiceText);
+                    choiceLocalized.Add(null);
+                }
+            }
+    
+            return new ChoiceRuntimeNode
+            {
+                choiceTexts = choiceTexts.ToArray(),
+                _choiceLocalized = choiceLocalized.ToArray()
+            };
         }
     }
 }

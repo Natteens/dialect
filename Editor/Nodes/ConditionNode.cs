@@ -1,10 +1,13 @@
 using System;
 using Dialect.Conditions;
+using Dialect.Core;
+using Dialect.Editor.Utils;
+using Dialect.Nodes;
 
 namespace Dialect.Editor.Nodes
 {
     [Serializable]
-    internal class ConditionNode : BaseNode
+    internal class ConditionNode : BaseNode, IConvertibleToRuntime
     {
         const string CONDITION_PORT = "condition";
         const string TRUE_PORT = "true";
@@ -13,13 +16,20 @@ namespace Dialect.Editor.Nodes
         protected override void OnDefinePorts(IPortDefinitionContext context)
         {
             AddInputContextPort(context, EXECUTION_PORT_DEFAULT_NAME, INPUT_DISPLAY_NAME);
-            
-            context.AddInputPort<DialectCondition>(CONDITION_PORT)
-                .WithDisplayName("Condition")
-                .Build();
-            
+            AddInputContextPort<DialectCondition>(context, CONDITION_PORT, "Condition");
             AddOutputContextPort(context, TRUE_PORT, "True");
             AddOutputContextPort(context, FALSE_PORT, "False");
+        }
+
+        public RuntimeNode CreateRuntimeNode()
+        {
+            var conditionPort = GetInputPortByName(CONDITION_PORT);
+            var condition = NodeUtility.GetInputPortValue<DialectCondition>(conditionPort);
+            
+            return new ConditionRuntimeNode
+            {
+                condition = condition
+            };
         }
     }
 }

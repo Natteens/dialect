@@ -11,13 +11,8 @@ namespace Dialect.Editor.Nodes
 
         protected override void OnDefinePorts(IPortDefinitionContext context)
         {
-            context.AddInputPort<LocalizedString>(LOCALIZED_INPUT)
-                .WithDisplayName("Localized String")
-                .Build();
-
-            context.AddOutputPort<string>(TEXT_OUTPUT)
-                .WithDisplayName("Text")
-                .Build();
+            AddInputContextPort<LocalizedString>(context,LOCALIZED_INPUT, "Localized String");
+            AddOutputContextPort<string>(context, TEXT_OUTPUT, "Text");
         }
     }
 }
