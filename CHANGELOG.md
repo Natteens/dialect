@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/Natteens/dialect/compare/v0.1.0...v0.1.1) (2025-12-23)
+
+
+### Bug Fixes
+
+* Refactor runtime node system and node conversion ([1a51748](https://github.com/Natteens/dialect/commit/1a51748b37193027c7bfaa1b183f006fbd6aff9c))
+
 # 📝 Changelog
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
