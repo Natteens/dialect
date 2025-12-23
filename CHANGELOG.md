@@ -1,3 +1,10 @@
+## [0.1.2](https://github.com/Natteens/dialect/compare/v0.1.1...v0.1.2) (2025-12-23)
+
+
+### Bug Fixes
+
+* Remove Unity/UPM dependency filtering from release workflow ([ad2f002](https://github.com/Natteens/dialect/commit/ad2f002d6a132c100d8a84f2e2810bfc2d7f3af0))
+
 ## [0.1.1](https://github.com/Natteens/dialect/compare/v0.1.0...v0.1.1) (2025-12-23)
 
 
