@@ -51,9 +51,9 @@ namespace Dialect.Editor.Nodes
             {
                 var choicePort = GetInputPortByName($"{CHOICE_PORT_PREFIX}{i}_In");
         
-                if (choicePort?.isConnected == true && choicePort.firstConnectedPort.GetNode() is LocalizedNode)
+                if (choicePort?.IsConnected == true && choicePort.FirstConnectedPort.GetNode() is LocalizedNode)
                 {
-                    var localizedNode = (LocalizedNode)choicePort.firstConnectedPort.GetNode();
+                    var localizedNode = (LocalizedNode)choicePort.FirstConnectedPort.GetNode();
                     var localizedPort = localizedNode.GetInputPortByName("localized");
                     choiceLocalized.Add(NodeUtility.GetInputPortValue<LocalizedString>(localizedPort));
                     choiceTexts.Add(null);

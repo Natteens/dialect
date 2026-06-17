@@ -16,16 +16,16 @@ namespace Dialect.Editor.Utils
 
             if (port == null) return value;
 
-            if (port.isConnected)
+            if (port.IsConnected)
             {
-                switch (port.firstConnectedPort.GetNode())
+                switch (port.FirstConnectedPort.GetNode())
                 {
                     case IVariableNode variableNode:
-                        variableNode.variable.TryGetDefaultValue<T>(out value);
-                        return value;
+                        variableNode.Variable.TryGetDefaultValue(out value);
+                        break;
                     case IConstantNode constantNode:
                         constantNode.TryGetValue<T>(out value);
-                        return value;
+                        break;
                 }
             }
             else

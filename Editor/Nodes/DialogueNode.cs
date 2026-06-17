@@ -30,9 +30,9 @@ namespace Dialect.Editor.Nodes
     
             var runtimeNode = new DialogueRuntimeNode();
     
-            if (speakerPort?.isConnected == true && speakerPort.firstConnectedPort.GetNode() is LocalizedNode)
+            if (speakerPort?.IsConnected == true && speakerPort.FirstConnectedPort.GetNode() is LocalizedNode)
             {
-                var localizedNode = (LocalizedNode)speakerPort.firstConnectedPort.GetNode();
+                var localizedNode = (LocalizedNode)speakerPort.FirstConnectedPort.GetNode();
                 var localizedPort = localizedNode.GetInputPortByName("localized");
                 runtimeNode._speakerLocalized = NodeUtility.GetInputPortValue<LocalizedString>(localizedPort);
             }
@@ -41,9 +41,9 @@ namespace Dialect.Editor.Nodes
                 runtimeNode.speakerName = NodeUtility.GetInputPortValue<string>(speakerPort);
             }
     
-            if (dialoguePort?.isConnected == true && dialoguePort.firstConnectedPort.GetNode() is LocalizedNode)
+            if (dialoguePort?.IsConnected == true && dialoguePort.FirstConnectedPort.GetNode() is LocalizedNode)
             {
-                var localizedNode = (LocalizedNode)dialoguePort.firstConnectedPort.GetNode();
+                var localizedNode = (LocalizedNode)dialoguePort.FirstConnectedPort.GetNode();
                 var localizedPort = localizedNode.GetInputPortByName("localized");
                 runtimeNode._dialogueLocalized = NodeUtility.GetInputPortValue<LocalizedString>(localizedPort);
             }

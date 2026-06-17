@@ -62,13 +62,13 @@ namespace Dialect.Editor.AssetImport
                     continue;
                 }
                 
-                for (int i = 0; i < currentNode.outputPortCount; i++)
+                for (int i = 0; i < currentNode.OutputPortCount; i++)
                 {
                     var port = currentNode.GetOutputPort(i);
 
-                    if (port.isConnected)
+                    if (port.IsConnected)
                     {
-                        nodesToProcess.Enqueue(port.firstConnectedPort.GetNode());
+                        nodesToProcess.Enqueue(port.FirstConnectedPort.GetNode());
                     }
                 }
             }
@@ -82,11 +82,11 @@ namespace Dialect.Editor.AssetImport
                 var runtimeIndex = kvp.Value;
                 var runtimeNode = runtimeGraph.nodes[runtimeIndex];
 
-                for (int i = 0; i < editorNode.outputPortCount; i++)
+                for (int i = 0; i < editorNode.OutputPortCount; i++)
                 {
                     var port = editorNode.GetOutputPort(i);
 
-                    if (port.isConnected && nodeMap.TryGetValue(port.firstConnectedPort.GetNode(), out int nextIndex))
+                    if (port.IsConnected && nodeMap.TryGetValue(port.FirstConnectedPort.GetNode(), out int nextIndex))
                     {
                         runtimeNode.nextNodeIndices.Add(nextIndex);
                     }
