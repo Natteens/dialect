@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/Natteens/dialect/compare/v0.1.2...v0.2.0) (2026-06-17)
+
+
+### Features
+
+* Use PascalCase accessors for ports and variables ([924613e](https://github.com/Natteens/dialect/commit/924613e4716f542c79e15ccf544176ec249b44fb))
+
 ## [0.1.2](https://github.com/Natteens/dialect/compare/v0.1.1...v0.1.2) (2025-12-23)
 
 
